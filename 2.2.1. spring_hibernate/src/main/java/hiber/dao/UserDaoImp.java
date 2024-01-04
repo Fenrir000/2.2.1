@@ -27,13 +27,10 @@ public class UserDaoImp implements UserDao {
    }
    @Override
    public User getUserByModelAndSeries(String model,int series){
-      List<User> list =listUsers();
-      for(User u : list){
-         if(u.getCar().getModel().equals(model) && u.getCar().getSeries()==series){
-            return u;
-         }
-      }
-      return null;
+      TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User as user  where user.car.model =:model and user.car.series =:series");
+      query.setParameter("model", model);
+      query.setParameter("series", series);
+      return query.getResultList().stream().findAny().orElse(null);
    }
 
 }
